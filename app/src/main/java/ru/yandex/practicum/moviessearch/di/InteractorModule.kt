@@ -4,7 +4,8 @@ import org.koin.dsl.module
 import ru.yandex.practicum.moviessearch.domain.api.MoviesInteractor
 import ru.yandex.practicum.moviessearch.domain.api.NamesInteractor
 import ru.yandex.practicum.moviessearch.domain.impl.MoviesInteractorImpl
-import ru.yandex.practicum.moviessearch.domain.impl.NamesInteracrorImpl
+import ru.yandex.practicum.moviessearch.domain.impl.NamesInteractorImpl
+
 
 val interactorModule = module {
 
@@ -13,7 +14,7 @@ val interactorModule = module {
     }
 
     single<NamesInteractor> {
-        NamesInteracrorImpl(get())
+        NamesInteractorImpl(get())
     }
 
 }

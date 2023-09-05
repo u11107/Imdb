@@ -11,7 +11,7 @@ import ru.yandex.practicum.moviessearch.data.dto.NamesSearchResponse
 interface IMDbApiService {
 
     @GET("/en/API/SearchName/Api/{expression}")
-    fun searchNames(@Path("expression") expression: String): Call<NamesSearchResponse>
+   suspend fun searchNames(@Path("expression") expression: String): NamesSearchResponse
 
     @GET("/en/API/SearchMovie/Api/{expression}")
     fun searchMovies(@Path("expression") expression: String): Call<MoviesSearchResponse>

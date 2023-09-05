@@ -1,5 +1,6 @@
-package ru.yandex.practicum.moviessearch.data
+package ru.yandex.practicum.moviessearch.domain.impl
 
+import ru.yandex.practicum.moviessearch.data.NetworkClient
 import ru.yandex.practicum.moviessearch.data.converters.MovieCastConverter
 import ru.yandex.practicum.moviessearch.data.dto.MovieCastRequest
 import ru.yandex.practicum.moviessearch.data.dto.MovieCastResponse

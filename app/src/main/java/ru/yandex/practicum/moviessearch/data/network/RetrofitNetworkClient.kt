@@ -3,6 +3,8 @@ package ru.yandex.practicum.moviessearch.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.yandex.practicum.moviessearch.data.NetworkClient
 import ru.yandex.practicum.moviessearch.data.dto.MovieCastRequest
 import ru.yandex.practicum.moviessearch.data.dto.MovieDetailsRequest
@@ -28,13 +30,33 @@ class RetrofitNetworkClient(
         }
 
         val response = when (dto) {
-            is NamesSearchRequest -> imdbService.searchNames(dto.expression).execute()
+//            is NamesSearchRequest -> imdbService.searchNames(dto.expression).execute()
             is MoviesSearchRequest -> imdbService.searchMovies(dto.expression).execute()
             is MovieDetailsRequest -> imdbService.getMovieDetails(dto.movieId).execute()
             else -> imdbService.getFullCast((dto as MovieCastRequest).movieId).execute()
         }
         val body = response.body()
         return body?.apply { resultCode = response.code() } ?: Response().apply { resultCode = response.code() }
+    }
+
+
+    override suspend fun doRequestSuspend(dto: Any): Response {
+        if (isConnected() == false) {
+            return Response().apply { resultCode = -1 }
+        }
+
+        if (dto !is NamesSearchRequest) {
+            return Response().apply { resultCode = 400 }
+        }
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = imdbService.searchNames(dto.expression)
+                response.apply { resultCode = 200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
+            }
+        }
     }
 
     private fun isConnected(): Boolean {

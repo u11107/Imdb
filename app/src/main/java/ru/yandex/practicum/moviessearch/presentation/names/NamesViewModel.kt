@@ -24,16 +24,12 @@ class NamesViewModel(private val context: Context,
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-
     private val stateLiveData = MutableLiveData<NamesState>()
     fun observeState(): LiveData<NamesState> = stateLiveData
 
     private val showToast = SingleLiveEvent<String?>()
     fun observeShowToast(): LiveData<String?> = showToast
-
     private var latestSearchText: String? = null
-
     private var searchJob: Job? = null
 
     fun searchDebounce(changedText: String) {
@@ -52,45 +48,38 @@ class NamesViewModel(private val context: Context,
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
+
             renderState(NamesState.Loading)
 
-            namesInteractor.searchNames(newSearchText, object : NamesInteractor.NamesConsumer {
-                override fun consume(foundNames: List<Person>?, errorMessage: String?) {
-                    val persons = mutableListOf<Person>()
-                    if (foundNames != null) {
-                        persons.addAll(foundNames)
+            viewModelScope.launch {
+                namesInteractor
+                    .searchNames(newSearchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
+            }
+        }
 
-                    when {
-                        errorMessage != null -> {
-                            renderState(
-                                NamesState.Error(
-                                    message = context.getString(
-                                        R.string.something_went_wrong),
-                                )
-                            )
-                            showToast.postValue(errorMessage)
-                        }
+    }
 
-                        persons.isEmpty() -> {
-                            renderState(
-                                NamesState.Empty(
-                                    message = context.getString(R.string.nothing_found),
-                                )
-                            )
-                        }
+    private fun processResult(foundNames: List<Person>?, errorMessage: String?) {
+        val persons = mutableListOf<Person>()
+        if (foundNames != null) {
+            persons.addAll(foundNames)
+        }
 
-                        else -> {
-                            renderState(
-                                NamesState.Content(
-                                    persons = persons,
-                                )
-                            )
-                        }
-                    }
-
-                }
-            })
+        when {
+            errorMessage != null -> {
+                renderState(NamesState.Error(message = context.getString(
+                    R.string.something_went_wrong)))
+                showToast.postValue(errorMessage)
+            }
+            persons.isEmpty() -> {
+                renderState(NamesState.Empty(message = context.getString(R.string.nothing_found)))
+            }
+            else -> {
+                renderState(NamesState.Content(persons = persons))
+            }
         }
     }
 
