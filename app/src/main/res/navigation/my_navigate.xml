@@ -1,0 +1,46 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_navigate"
+    app:startDestination="@id/moviesFragment">
+
+    <fragment
+        android:id="@+id/moviesFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.movies.MoviesFragment"
+        android:label="fragment_movies"
+        tools:layout="@layout/fragment_movies" >
+
+        <action
+            android:id="@+id/action_moviesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
+
+        <action
+            android:id="@+id/action_detailsFragment_to_moviesCastFragment"
+            app:destination="@id/moviesCastFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/moviesCastFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.cast.MoviesCastFragment"
+        android:label="fragment_movies_cast"
+        tools:layout="@layout/fragment_movies_cast" />
+
+    <fragment
+        android:id="@+id/namesFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.names.NamesFragment"
+        android:label="fragment_names"
+        tools:layout="@layout/fragment_names" />
+
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="ru.yandex.practicum.moviessearch.ui.info.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+</navigation>

@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/moviesFragment"
+        android:icon="@drawable/ic_movies"
+        android:title="@string/movies" />
+
+    <item
+        android:id="@+id/namesFragment"
+        android:icon="@drawable/ic_names"
+        android:title="@string/persons" />
+
+    <item
+        android:id="@+id/infoFragment"
+        android:icon="@drawable/ic_info"
+        android:title="@string/info" />
+</menu>
